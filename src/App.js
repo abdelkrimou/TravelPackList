@@ -1,25 +1,38 @@
-import logo from './logo.svg';
-import './App.css';
+import { useState } from "react";
+import Header from "./Header";
+import Form from "./Form";
+import PackingList from "./PackingList";
+import Footer from "./Footer";
 
-function App() {
+export default function App() {
+  const [items, setItems] = useState([]);
+  const packedOne = items.filter((item) => item.packed).length;
+
+  function handleAddItems(item) {
+    setItems((items) => [...items, item]);
+  }
+  function deleteItem(id) {
+    setItems((item) => item.filter((item) => item.id !== id));
+  }
+  function handleCheck(id) {
+    setItems((items) =>
+      items.map((item) =>
+        item.id === id ? { ...item, packed: !item.packed } : item
+      )
+    );
+    console.log(items);
+  }
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div className="app">
+      <Header />
+      <Form items={items} handleAddItems={handleAddItems} />
+      <PackingList
+        items={items}
+        deleteItem={deleteItem}
+        handleCheck={handleCheck}
+        setItems={setItems}
+      />
+      <Footer items={items} packedOne={packedOne} />
     </div>
   );
 }
-
-export default App;
